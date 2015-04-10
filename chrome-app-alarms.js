@@ -108,7 +108,7 @@ Polymer('chrome-app-alarms', {
     this._eventFn = function(alarm){
       if(context.name !== alarm.name) return;
 
-      context.fire('alarm', {'alarm':alarm})
+      context.fire('alarm', {'alarm':alarm});
     };
 
     chrome.alarms.onAlarm.addListener(this._eventFn);
