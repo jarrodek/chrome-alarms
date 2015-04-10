@@ -14,7 +14,7 @@ You need to declare "alarms" perrmissions into your manifest file.
 
 Example:
 
-    <chrome-app-alarms id="alarms" 
+    <chrome-alarms id="alarms" 
       on-alarm-info="{{onAlarmInfo}}" 
       on-alarm="{{onAlarm}}" 
-      name="{{name}}"></chrome-app-alarms>
+      name="{{name}}"></chrome-alarms>

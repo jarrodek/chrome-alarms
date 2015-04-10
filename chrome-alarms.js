@@ -1,4 +1,4 @@
-Polymer('chrome-app-alarms', {
+Polymer('chrome-alarms', {
   /**
    * Fired when an information about alram(s) has been requested.
    * The details object will always result with an array of alarms set.
