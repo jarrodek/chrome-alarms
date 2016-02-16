@@ -1,0 +1,25 @@
+{
+  "name": "chrome-alarms",
+  "version": "1.0.0",
+  "license": "LICENSE.txt",
+  "description": "A Chrome alarms API in a web component.",
+  "authors": [
+    "Pawel Psztyc"
+  ],
+  "homepage": "https://github.com/jarrodek/chrome-alarms",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jarrodek/chrome-alarms.git"
+  },
+  "keywords": [
+    "webcomponents", "polymer", "chrome-apps", "chrome"
+  ],
+  "private": false,
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.2.0"
+  },
+  "ignore": [
+    "externs/**",
+    ".gitignore"
+  ]
+}
