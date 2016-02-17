@@ -1,6 +1,6 @@
 {
   "name": "chrome-alarms",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "license": "LICENSE.txt",
   "description": "A Chrome alarms API in a web component.",
   "authors": [

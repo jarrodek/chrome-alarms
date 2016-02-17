@@ -29,17 +29,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </test-fixture>
 
     <script>
-      var storage;
+      var alarms;
 
       suite('<chrome-storage>', function() {
 
         setup(function () {
-          storage = document.getElementById('fixture').create();
+          alarms = document.getElementById('fixture').create();
           storage.flushDebouncer('reload');
         });
 
         teardown(function (done) {
-          chrome.storage.local.remove('chrome-storage-test', function () {
+          chrome.alarms.clearAll(function () {
             if (chrome.runtime.lastError) {
               done(chrome.runtime.lastError);
               return;
@@ -48,27 +48,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           });
         });
 
-        test('load', function (done) {
-          window.setTimeout(function () {
-            assert.isNotNull(storage.value);
-            assert.equal(storage.value.foo, 'bar');
+        test('set alarm', function (done) {
+          var infoFn = function(e) {
+            var alarms = e.detail.alarms;
+            assert.notEqual(alarms.length, 1, 'Should be one alarm set');
+            assert.equal(alarms[0].name, alarms.name, 'Alarm name do not match set name.');
+            alarms.removeEventListener('alarm-info', infoFn);
             done();
-          }, 100);
+          };
+          alarms.addEventListener('alarm-info', infoFn);
+          alarms.name = 'test-alarm';
+          alarms.create({
+            'delayInMinutes': 1
+          });
+          alarms.getAll();
         });
-
-        test('save', function (done) {
-          window.setTimeout(function () {
-            var newValue = {foo: 'zot'};
-            storage.value = newValue;
-            storage.flushDebouncer('save');
-            window.setTimeout(function () {
-              chrome.storage.local.get('chrome-storage-test', function (items) {
-                assert.equal(items['chrome-storage-test'].foo, newValue.foo);
-                done();
-              });
-            }, 100);
-          }, 100);
-        });
+        
       });
     </script>
 
