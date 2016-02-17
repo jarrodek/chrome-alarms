@@ -2,26 +2,35 @@
 
 Polymer({
   /**
-   * Fired when an information about alram(s) has been requested.
+   * Fired when an information about alarm(s) has been requested.
    * The details object will always result with an array of alarms set.
    *
    * @event alarm-info
+   * @param {Array<Object>} alarms An alarm object.
+   *   - {String} name Name of this alarm.
+   *   - {double} scheduledTime Time at which this alarm was scheduled to fire, in milliseconds
+   *     past the epoch (e.g. Date.now() + n). For performance reasons, the alarm may have been
+   *     delayed an arbitrary amount beyond this.
+   *   - {double} periodInMinutes Optional. If not null, the alarm is a repeating alarm and will
+   *     fire again in periodInMinutes minutes.
    */
   /**
-   * Fired when an alarm has elapsed.
+   * Fired when an alarm has fired.
    *
    * @event alarm
+   * @param {Object} alarm Aee https://developer.chrome.com/apps/alarms#type-Alarm for description
    */
   /**
    * Fired when an alarm(s) has been removed.
    * The event's details will contain wasCleared (boolean) flag.
    *
    * @event clear
+   * @param {Boolean} wasCleared True if the alarm was cleared.
    */
   is: 'chrome-alarms',
   properties: {
     /**
-     * A name to identify the alarm. Defaults to the empty string.
+     * A name that identify the alarm. Defaults to the empty string.
      *
      * @type String
      */

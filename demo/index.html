@@ -1,0 +1,131 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+
+<head>
+  <title>chrome-storage</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../paper-styles/paper-styles.html">
+  <link rel="import" href="../../paper-styles/demo-pages.html">
+  <link rel="import" href="../../paper-button/paper-button.html">
+  <link rel="import" href="../../paper-input/paper-input-container.html">
+  <link rel="import" href="../chrome-alarms.html">
+  <style is="custom-style">
+  html, body {
+    overflow: auto;
+  }
+  .panel-settings {
+    @apply(--layout-vertical);
+    @apply(--layout-center);
+  }
+  .logs div {
+    padding: 8px;
+  }
+  </style>
+</head>
+
+<body>
+  <div class="vertical-section vertical-section-container centered">
+    <template is="dom-bind">
+      <chrome-alarms id="alarms" name="{{alarmName}}" on-alarm-info="onAlarmInfo" on-alarm="onAlarm" on-clear="onAlarmCleared"></chrome-alarms>
+      <p>Setup alarm below that will use <code>Chrome alarms API</code>.</p>
+      <section class="panel-settings">
+        <!-- alarm name -->
+        <paper-input-container>
+          <label>Alarm name</label>
+          <input is="iron-input" type="text" value="{{alarmName::input}}" placeholder="Alarm name">
+        </paper-input-container>
+        <!-- alarm interval -->
+        <paper-input-container>
+          <div prefix>(min)</div>
+          <label>Interval / period</label>
+          <input is="iron-input" type="number" value="{{interval::input}}" min="1">
+        </paper-input-container>
+        <!-- action buttons -->
+        <paper-button on-click="setAlarm">set</paper-button>
+        <paper-button on-click="getAlarm">get</paper-button>
+        <paper-button on-click="clearAlarm">clear</paper-button>
+      </section>
+      <section class="logs">
+      <h2>Log</h2>
+      <template is="dom-repeat" items="{{logs}}">
+        <div>
+          Log: [[item.log]]
+        </div>
+      </template>
+      </section>
+    </template>
+  </div>
+  <script>
+  var demo = document.querySelector('template');
+  demo.logs = [];
+  demo.interval = 1;
+  demo.invalid = false;
+  demo.alarmName = 'chrome-alarms-test';
+
+  demo.onAlarmInfo = function(e) {
+    var alarms = e.detail.alarms;
+    if (alarms.length > 0 && !(alarms.length === 1 && !alarms[0])) {
+      for (var i = 0, len = alarms.length; i < len; i++) {
+        if (!alarms[i])
+          continue;
+        demo.push('logs', {
+          log: 'Alarm is running: "' + alarms[i].name + '" and will run at: ' +
+            new Date(alarms[i].scheduledTime) + '. Now it\'s: ' + new Date()
+        });
+        console.log(alarms[i]);
+      }
+    } else {
+      demo.push('logs', {
+        log: 'There are no running alarms.'
+      });
+    }
+  };
+  demo.setAlarm = function() {
+    demo.$.alarms.create({
+      'delayInMinutes': parseInt(demo.interval)
+    });
+    demo.push('logs', {
+      log: 'The alarm will run in ' + demo.interval + ' minute(s).'
+    });
+  };
+  demo.getAlarm = function() {
+    demo.$.alarms.getAlarm();
+  };
+  demo.clearAlarm = function() {
+    demo.$.alarms.clear();
+  };
+  demo.onAlarm = function(event) {
+    var alarm = event.detail.alarm;
+    if (!alarm)
+      return;
+    demo.push('logs', {
+      log: 'The alarm "' + alarm.name + '" scheduled for ' + new Date(alarm.scheduledTime) + ' has fired.'
+    });
+  };
+  demo.onAlarmCleared = function(e) {
+    if (e.detail.wasCleared) {
+      demo.push('logs', {
+        log: 'The alarm "' + demo.alarmName + '" has been removed.'
+      });
+    } else {
+      demo.push('logs', {
+        log: 'The alarm "' + demo.alarmName + '" hasn\'t been removed. You need to set it first.'
+      });
+    }
+  };
+  demo.addEventListener('dom-change', function() {
+    demo.$.alarms.getAll();
+  });
+  </script>
+</body>
+
+</html>
